@@ -1,5 +1,5 @@
 # klv-generator
 growtopia klv generator
 
-# Credits
+# credits
 * [teosleep](https://github.com/teosleep)
