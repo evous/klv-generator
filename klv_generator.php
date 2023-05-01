@@ -1,6 +1,6 @@
 <?php
 
-//credits teosleep
+//credits teosleep [https://github.com/teosleep]
 
 function get_md5_checksum($str) {
     $md_value = md5($str, true);
@@ -66,7 +66,7 @@ $hash = proton_hash(generate_rid() . "RT");
 $klv = create_klv($game_version, $protocol, $hash, $rid);
 
 echo "rid|" . $rid . PHP_EOL;
-echo "hash|" . $hash. PHP_EOL;
-echo "klv|" . $klv. PHP_EOL;
+echo "hash|" . $hash . PHP_EOL;
+echo "klv|" . $klv . PHP_EOL;
 
 ?>
