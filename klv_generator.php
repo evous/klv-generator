@@ -1,6 +1,6 @@
 <?php
 
-//credits teosleep [https://github.com/teosleep]
+// credits teosleep [https://github.com/teosleep]
 
 function get_md5_checksum($str) {
     $md_value = md5($str, true);
@@ -35,6 +35,14 @@ function generate_rid() {
     return strtoupper($rid_str);
 }
 
+function generate_device_id($length = 16) {
+    $bytes = random_bytes($length);
+
+    $hexString = bin2hex($bytes);
+
+    return strtoupper($hexString);
+}
+
 function proton_hash($data, $length = 0) {
     $hash = 0x55555555;
 
@@ -61,8 +69,7 @@ function proton_hash($data, $length = 0) {
 $game_version = 4.23; // growtopia current version.
 $protocol = 189; // if growtopia version change protocol will change too.
 $rid = generate_rid();
-$hash = proton_hash(generate_rid() . "RT");
-
+$hash = proton_hash(generate_device_id() . "RT");
 $klv = create_klv($game_version, $protocol, $hash, $rid);
 
 echo "rid|" . $rid . PHP_EOL;
