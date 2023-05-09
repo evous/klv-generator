@@ -15,10 +15,10 @@ function get_md5_checksum($str) {
 
 function create_klv($game_version, $protocol, $hash, $rid) {
     $salts = array(
-        "42e2ae20305244ddaf9b0de5e897fc74",
-        "ccc18d2e2ca84e0a81ba29a0af2edc9c",
-        "92e9bf1aad214c69b1f3a18a03aae8dc",
-        "58b92130c89c496b96164b776d956242" 
+        "13c93f386db9da3e00dda16d770b0c83",
+        "6b1c01f9128a62a2c97b1a0da4612168",
+        "3402d278d8519a522c94d122e98e2e49",
+        "ba95613bc0fd94a9d89c5919670e7d5d"
         // credits zumor
     );
 
@@ -67,8 +67,8 @@ function proton_hash($data, $length = 0) {
     return $hash;
 }
 
-$game_version = 4.24; // growtopia current version.
-$protocol = 190; // if growtopia version change protocol will change too.
+$game_version = 4.25; // growtopia current version.
+$protocol = 191; // if growtopia version change protocol will change too.
 $rid = generate_rid();
 $hash = proton_hash(generate_device_id() . "RT");
 $klv = create_klv($game_version, $protocol, $hash, $rid);
