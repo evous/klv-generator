@@ -60,10 +60,6 @@ function proton_hash($data, $length = 0) {
         }
     }
 
-    if ($hash >= 0x80000000) {
-        $hash -= 0x100000000;
-    }
-
     return $hash;
 }
 
