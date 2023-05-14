@@ -1,42 +1,9 @@
 <?php
 
 // credits teosleep [https://github.com/teosleep]
+// credits zumor
 
-function get_md5_checksum($str) {
-    $md_value = md5($str, true);
-
-    $hex_value = "";
-    for ($i = 0; $i < strlen($md_value); ++$i) {
-        $hex_value .= sprintf("%02X", ord($md_value[$i]));
-    }
-
-    return $hex_value;
-}
-
-function create_klv($game_version, $protocol, $hash, $rid) {
-    $salts = array(
-        "13c93f386db9da3e00dda16d770b0c83",
-        "6b1c01f9128a62a2c97b1a0da4612168",
-        "3402d278d8519a522c94d122e98e2e49",
-        "ba95613bc0fd94a9d89c5919670e7d5d"
-        // credits zumor
-    );
-
-    $checksum_str = $game_version . $salts[0] . $protocol . $salts[1] . $hash . $salts[2] . $rid . $salts[3];
-    return get_md5_checksum($checksum_str);
-}
-
-function generate_rid() {
-    $rid_str = "";
-
-    for ($i = 0; $i < 16; $i++) {
-        $rid_str .= sprintf("%02X", mt_rand(0, 255));
-    }
-
-    return strtoupper($rid_str);
-}
-
-function generate_device_id($length = 16) {
+function gen_hex($length = 16) {
     $bytes = random_bytes($length);
 
     $hexString = bin2hex($bytes);
@@ -63,10 +30,34 @@ function proton_hash($data, $length = 0) {
     return $hash;
 }
 
-$game_version = 4.25; // growtopia current version.
+function sha256($str) {
+    return hash('sha256', $str);
+}
+
+function create_klv($game_version, $protocol, $hash, $rid) {
+    $salts = [
+        '198c4213effdbeb93ca64ea73c1f505f',
+        '82a2e2940dd1b100f0d41d23b0bb6e4d',
+        'c64f7f09cdd0c682e730d2f936f36ac2',
+        '27d8da6190880ce95591215f2c9976a6'
+    ];
+
+    return sha256(
+        sha256((string)$game_version) . 
+        $salts[0] . 
+        sha256((string)$hash) . 
+        $salts[1] . 
+        sha256((string)$protocol) . 
+        $salts[2] . 
+        sha256($rid) . 
+        $salts[3]
+    );
+}
+
+$game_version = 4.26; // growtopia current version.
 $protocol = 191; // if growtopia version change protocol will change too.
-$rid = generate_rid();
-$hash = proton_hash(generate_device_id() . "RT");
+$rid = gen_hex();
+$hash = proton_hash(gen_hex() . "RT");
 $klv = create_klv($game_version, $protocol, $hash, $rid);
 
 echo "rid|" . $rid . PHP_EOL;
