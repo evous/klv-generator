@@ -5,26 +5,15 @@
 
 function gen_hex($length = 16) {
     $bytes = random_bytes($length);
-
-    $hexString = bin2hex($bytes);
-
-    return strtoupper($hexString);
+    return strtoupper(bin2hex($bytes));
 }
 
 function proton_hash($data, $length = 0) {
     $hash = 0x55555555;
+    $length = $length > 0 ? $length : strlen($data);
 
-    if (!empty($data)) {
-        if ($length > 0) {
-            for ($i = 0; $i < $length; $i++) {
-                $hash = (($hash >> 27) + ($hash << 5) + ord($data[$i])) & 0xFFFFFFFF;
-            }
-        } else {
-            $length = strlen($data);
-            for ($i = 0; $i < $length; $i++) {
-                $hash = (($hash >> 27) + ($hash << 5) + ord($data[$i])) & 0xFFFFFFFF;
-            }
-        }
+    for ($i = 0; $i < $length; $i++) {
+        $hash = (($hash >> 27) + ($hash << 5) + ord($data[$i])) & 0xFFFFFFFF;
     }
 
     return $hash;
@@ -54,10 +43,18 @@ function create_klv($game_version, $protocol, $hash, $rid) {
     );
 }
 
-$game_version = 4.26; // growtopia current version.
-$protocol = 191; // if growtopia version change protocol will change too.
-$rid = gen_hex();
-$hash = proton_hash(gen_hex() . "RT");
+$game_version = $_GET['gt_version'] ?? 4.26;
+$protocol = $_GET['protocol'] ?? 191;
+$rid = $_GET['rid'] ?? gen_hex();
+
+if (!empty($_GET['device_id'])) {
+    $hash = proton_hash($_GET['device_id'] . "RT");
+} elseif (!empty($_GET['hash'])) {
+    $hash = $_GET['hash'];
+} else {
+    $hash = proton_hash(gen_hex() . "RT");
+}
+
 $klv = create_klv($game_version, $protocol, $hash, $rid);
 
 echo "rid|" . $rid . PHP_EOL;
